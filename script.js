@@ -1,7 +1,7 @@
 const juegos = {
-  genshin: { max: 160, minutosPorUnidad: 8, tiempoInicio: null },
-  wuthering: { max: 240, minutosPorUnidad: 6, tiempoInicio: null },
-  zenless: { max: 240, minutosPorUnidad: 6, tiempoInicio: null },
+  genshin: { max: 160, minutosPorUnidad: 8, tiempoInicio: null, stamina: 0 },
+  wuthering: { max: 240, minutosPorUnidad: 6, tiempoInicio: null, stamina: 0 },
+  zenless: { max: 240, minutosPorUnidad: 6, tiempoInicio: null, stamina: 0 },
 };
 
 // Función para guardar la stamina y la hora de inicio
@@ -15,6 +15,7 @@ function guardarStamina(juego) {
     return;
   }
 
+  data.stamina = stamina; // Guardar la stamina inicial
   data.tiempoInicio = new Date();  // Guardar la hora de inicio
   actualizar(juego); // Actualizar el contador inmediatamente
 }
@@ -31,18 +32,15 @@ function actualizar(juego) {
 
   const ahora = new Date();
   const minutosPasados = Math.floor((ahora - data.tiempoInicio) / 60000);  // minutos transcurridos
-  const cantidad = Math.min(data.max, Math.floor(minutosPasados / data.minutosPorUnidad));
-  const restante = Math.max(0, data.max - cantidad);
+  const cantidad = Math.min(data.max, data.stamina + Math.floor(minutosPasados / data.minutosPorUnidad)); // Sumar la stamina en base al tiempo transcurrido
+  const restante = Math.max(0, data.max - cantidad);  // Cuánto falta para llegar al máximo de stamina
 
-  // Calcular el tiempo restante en minutos y convertirlo a horas, minutos y segundos
+  // Calcular el tiempo restante en minutos
   const tiempoRestante = restante * data.minutosPorUnidad;
-  const horas = Math.floor(tiempoRestante / 60);
-  const minutos = Math.floor(tiempoRestante % 60);
-  const segundos = Math.floor((ahora - data.tiempoInicio) / 1000) % 60; // Cálculo correcto de segundos
 
   output.innerHTML = ` 
     <strong>Stamina actual:</strong> ${cantidad} / ${data.max}<br>
-    <strong>Tiempo restante:</strong> ${Math.floor(horas)}h ${Math.floor(minutos)}m ${Math.floor(segundos)}s
+    <strong>Tiempo restante:</strong> ${tiempoRestante} minutos
   `;
 }
 
