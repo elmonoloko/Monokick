@@ -30,7 +30,7 @@ function actualizar(juego) {
   }
 
   const ahora = new Date();
-  const minutosPasados = Math.floor((ahora - data.tiempoInicio) / 60000);
+  const minutosPasados = Math.floor((ahora - data.tiempoInicio) / 60000);  // minutos transcurridos
   const cantidad = Math.min(data.max, Math.floor(minutosPasados / data.minutosPorUnidad));
   const restante = Math.max(0, data.max - cantidad);
 
@@ -38,11 +38,11 @@ function actualizar(juego) {
   const tiempoRestante = restante * data.minutosPorUnidad;
   const horas = Math.floor(tiempoRestante / 60);
   const minutos = Math.floor(tiempoRestante % 60);
-  const segundos = Math.floor((ahora - new Date(ahora)) / 1000) % 60;
+  const segundos = Math.floor((ahora - data.tiempoInicio) / 1000) % 60; // Cálculo correcto de segundos
 
   output.innerHTML = ` 
     <strong>Stamina actual:</strong> ${cantidad} / ${data.max}<br>
-    <strong>Tiempo restante:</strong> ${horas}h ${minutos}m ${segundos}s
+    <strong>Tiempo restante:</strong> ${Math.floor(horas)}h ${Math.floor(minutos)}m ${Math.floor(segundos)}s
   `;
 }
 
@@ -63,4 +63,3 @@ window.onload = () => {
     input.value = "";  // Deja el input vacío cuando se recarga la página
   }
 };
-
