@@ -1,45 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+:root {
+  --bg-dark: #121417;
+  --bg-light: #f9f9f9;
+  --card-dark: #1f222a;
+  --card-light: #ffffff;
+  --text-dark: #e0e0e0;
+  --text-light: #222222;
+  --subtext-dark: #ffffff;
+  --subtext-light: #919191;
+  --accent: #9c4ff7;
+  --transition-time: 0.4s;
+}
+
 body {
-  font-family: sans-serif;
-  background: #111;
-  color: #fff;
-  padding: 20px;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-dark);
+  padding: 30px;
+  margin: 0;
+  transition: background var(--transition-time), color var(--transition-time);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 h1 {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
+  font-weight: 600;
+  font-size: 2.4rem;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 28px;
+  max-width: 1100px;
+  width: 100%;
 }
 
 .card {
-  background: #222;
-  border: 1px solid #444;
-  border-radius: 10px;
-  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--card-dark);
+  border-radius: 16px;
+  padding: 25px 30px;
+  color: var(--text-dark);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.35);
+  transition: box-shadow var(--transition-time);
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: 0 15px 25px rgba(0,0,0,0.55);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--bg-dark);
+  opacity: 0.3;
+  border-radius: 16px;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .header {
   display: flex;
   align-items: center;
-  gap: 10px;
-}
-
-.header img {
-  width: 32px;
-  height: 32px;
-}
-
-input[type="time"] {
+  gap: 15px;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
   width: 100%;
-  padding: 5px;
-  margin-top: 10px;
-  background: #333;
-  color: #fff;
-  border: 1px solid #555;
-  border-radius: 5px;
+  justify-content: center;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 2px solid var(--accent);
+}
+
+h2 {
+  font-weight: 600;
+  font-size: 1.6rem;
+  color: var(--accent);
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+input[type="number"] {
+  width: 80%;
+  max-width: 280px;
+  padding: 14px 18px;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-color: #2e2f3a;
+  color: var(--text-dark);
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  outline-offset: 2px;
+  position: relative;
+  z-index: 1;
+  margin: 0 auto;
+}
+
+input::placeholder {
+  color: var(--subtext-dark);
+}
+
+.output {
+  margin-top: 18px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--subtext-dark);
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+button {
+  margin-top: 15px;
+  background-color: var(--accent);
+  border: none;
+  padding: 10px 20px;
+  color: var(--card-dark);
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #3ea5e0;
+}
+
+.top-button {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  background-color: var(--card-dark);
+  color: var(--accent);
+  border: none;
+  padding: 12px 16px;
+  font-size: 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35);
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  z-index: 100;
+}
+
+.top-button:hover {
+  background-color: var(--accent);
+  color: var(--card-dark);
+  transform: scale(1.1);
+}
+
+/* Modo claro */
+body.light-mode {
+  --bg-dark: var(--bg-light);
+  --card-dark: var(--card-light);
+  --text-dark: var(--text-light);
+  --subtext-dark: var(--subtext-light);
+  --accent: #005f99;
+  background: var(--bg-light);
+  color: var(--text-light);
 }

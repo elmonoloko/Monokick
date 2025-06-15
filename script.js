@@ -4,7 +4,6 @@ const juegos = {
   zenless: { max: 240, minutosPorUnidad: 6, tiempoInicio: null, stamina: 0 },
 };
 
-// Función para guardar la stamina y la hora de inicio
 function guardarStamina(juego) {
   const input = document.getElementById(`${juego}-stamina`);
   const stamina = parseInt(input.value);
@@ -15,12 +14,11 @@ function guardarStamina(juego) {
     return;
   }
 
-  data.stamina = stamina; // Guardar la stamina inicial
-  data.tiempoInicio = new Date();  // Guardar la hora de inicio
-  actualizar(juego); // Actualizar el contador inmediatamente
+  data.stamina = stamina;
+  data.tiempoInicio = new Date();
+  actualizar(juego);
 }
 
-// Función para actualizar la stamina y la cuenta regresiva
 function actualizar(juego) {
   const output = document.getElementById(`${juego}-output`);
   const data = juegos[juego];
@@ -31,33 +29,57 @@ function actualizar(juego) {
   }
 
   const ahora = new Date();
-  const minutosPasados = Math.floor((ahora - data.tiempoInicio) / 60000);  // minutos transcurridos
-  const cantidad = Math.min(data.max, data.stamina + Math.floor(minutosPasados / data.minutosPorUnidad)); // Sumar la stamina en base al tiempo transcurrido
-  const restante = Math.max(0, data.max - cantidad);  // Cuánto falta para llegar al máximo de stamina
+  const tiempoMinutosSegundos = data.minutosPorUnidad * 60;
+  const tiempoTranscurridoSegundos = (ahora - data.tiempoInicio) / 1000;
 
-  // Calcular el tiempo restante en minutos
-  const tiempoRestante = restante * data.minutosPorUnidad;
+  // Cuántos puntos de stamina se han recuperado desde tiempoInicio
+  const puntosRecuperados = Math.floor(tiempoTranscurridoSegundos / tiempoMinutosSegundos);
+  const nuevaStamina = Math.min(data.max, data.stamina + puntosRecuperados);
 
-  output.innerHTML = ` 
-    <strong>Stamina actual:</strong> ${cantidad} / ${data.max}<br>
-    <strong>Tiempo restante:</strong> ${tiempoRestante} minutos
+  if (nuevaStamina > data.stamina) {
+    // Actualizar stamina y reiniciar tiempoInicio para el cálculo siguiente
+    data.stamina = nuevaStamina;
+    // Ajustar tiempoInicio para que empiece a contar desde el último incremento
+    data.tiempoInicio = new Date(data.tiempoInicio.getTime() + puntosRecuperados * tiempoMinutosSegundos * 1000);
+  }
+
+  const restante = Math.max(0, data.max - data.stamina);
+  const segundosDesdeUltimoIncremento = tiempoTranscurridoSegundos % tiempoMinutosSegundos;
+  const segundosParaSiguiente = Math.ceil(tiempoMinutosSegundos - segundosDesdeUltimoIncremento);
+
+  // Convertir segundos para mostrar hh:mm:ss
+  const horas = Math.floor(segundosParaSiguiente / 3600);
+  const minutos = Math.floor((segundosParaSiguiente % 3600) / 60);
+  const segundos = segundosParaSiguiente % 60;
+
+  const tiempoRestanteTotal = restante * data.minutosPorUnidad;
+  const horasTotal = Math.floor(tiempoRestanteTotal / 60);
+  const minutosTotal = tiempoRestanteTotal % 60;
+
+  output.innerHTML = `
+    <strong>Stamina actual:</strong> ${data.stamina} / ${data.max}<br>
+    <strong>Tiempo para siguiente punto:</strong> ${horas.toString().padStart(2,'0')}:${minutos.toString().padStart(2,'0')}:${segundos.toString().padStart(2,'0')}<br>
+    <strong>Tiempo total para llenar:</strong> ${horasTotal}h ${minutosTotal}m
   `;
 }
 
-// Función para actualizar todos los contadores
 function actualizarTodo() {
   for (const juego in juegos) {
     actualizar(juego);
   }
 }
 
-// Ejecutar la actualización cada segundo
-setInterval(actualizarTodo, 1000); // cada segundo
+setInterval(actualizarTodo, 1000);
 
-// Primera actualización al cargar
 window.onload = () => {
   for (const juego in juegos) {
-    const input = document.getElementById(`${juego}-stamina`);
-    input.value = "";  // Deja el input vacío cuando se recarga la página
+    document.getElementById(`${juego}-stamina`).value = "";
   }
 };
+
+// Tema claro/oscuro
+function toggleModo() {
+  document.body.classList.toggle("light-mode");
+  const btn = document.querySelector(".top-button");
+  btn.textContent = document.body.classList.contains("light-mode") ? "☀️" : "🌙";
+}
