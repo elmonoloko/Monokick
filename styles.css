@@ -53,6 +53,8 @@ h1 {
   transition: box-shadow var(--transition-time);
   position: relative;
   overflow: hidden;
+  /* Para que el contenido esté sobre la imagen difuminada */
+  z-index: 1;
 }
 
 .card:hover {
@@ -63,11 +65,14 @@ h1 {
   content: "";
   position: absolute;
   inset: 0;
-  background: var(--bg-dark);
-  opacity: 0.3;
+  background: 
+    linear-gradient(to bottom right, rgba(0,0,0,0.35), rgba(0,0,0,0.7)),
+    var(--bg-img) no-repeat center/cover;
+  filter: blur(6px);
   border-radius: 16px;
-  z-index: 0;
+  z-index: -1;  /* detrás del contenido */
   pointer-events: none;
+  transition: background 0.4s ease;
 }
 
 .header {
@@ -138,6 +143,7 @@ button {
   border-radius: 12px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  z-index: 1;
 }
 
 button:hover {
